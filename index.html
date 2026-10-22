@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Planner</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 25px 16px;
+            font-family: Arial, sans-serif;
+            background: #F3F5FB;
+            color: #20264B;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        header p {
+            color: #667085;
+            font-size: 12px;
+             letter-spacing: 1px;
+        }
+
+        header h1 {
+            font-size: 26px;
+            margin: 8px 0;
+        }
+
+        .logo {
+            background: #6256D9;
+            color: white;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 24px;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #6256D9, #8B80F5);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .welcome p { color: #EEEAFE; }
+
+        h2 { font-size: 21px; }
+
+        .add-form {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 22px;
+        }
+
+        input, button {
+            font: inherit;
+        }
+
+        #taskName, #dueDate {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0 12px;
+            border: 1px solid #D8D9E7;
+            border-radius: 9px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 16px;
+        }
+
+        .add-button {
+            width: 100%;
+            background: #6256D9;
+            color: white;
+            font-weight: bold;
+        }
+
+        .task {
+            background: white;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 3px 12px #20264B0D;
+        }
+
+        .task input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6256D9;
+        }
+
+        .task-details {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .task.completed .task-title {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .category {
+            display: block;
+            font-size: 12px;
+            color: #667085;
+            margin-top: 5px;
+        }
+
+        .delete-button {
+            background: #FCE8E8;
+            color: #A32626;
+            padding: 8px 10px;
+        }
+
+        #emptyMessage {
+            color: #667085;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            color: #667085;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+        .timetable {
+            margin-top: 30px;
+        }
+
+        #classForm select,
+        #classForm input {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0 12px;
+            border: 1px solid #D8D9E7;
+            border-radius: 9px;
+            background: white;
+        }
+
+        .class-card {
+            background: white;
+            padding: 16px;
+            margin: 10px 0;
+            border-radius: 14px;
+            border-left: 4px solid #6256D9;
+            box-shadow: 0 3px 12px #20264B0D;
+        }
+        .dashboard {
+            margin-bottom: 25px;
+        }
+
+        .dashboard-label {
+            color: #6256D9;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .dashboard h2 {
+            margin-bottom: 8px;
+        }
+
+        #todayDate {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 14px 10px;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px #20264B0D;
+        }
+
+        .stat-card span {
+            display: block;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .stat-card strong {
+            display: block;
+            color: #6256D9;
+            font-size: 25px;
+            margin-top: 8px;
+        }
+        </style>
+       <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#7c3aed"> 
+
+</head>
+
+<body>
+<main class="container">
+    <section class="dashboard">
+        <p class="dashboard-label">YOUR DASHBOARD</p>
+        <h2>Good day, Student! 👋</h2>
+        <p id="todayDate"></p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span>Total tasks</span>
+                <strong id="totalTasks">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Completed</span>
+                <strong id="completedTasks">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Pending</span>
+                <strong id="pendingTasks">0</strong>
+            </div>
+        </div>
+    </section>
+    <header>
+        <div>
+            <p>MY STUDY SPACE</p>
+            <h1>Student Planner</h1>
+            <span>Plan it. Do it. Achieve it.</span>
+        </div>
+        <div class="logo">🎓</div>
+    </header>
+
+    <section class="welcome">
+        <p>YOUR DAILY GOALS</p>
+        <h2>Make today count! ✨</h2>
+        <p>Every task completed is progress.</p>
+        <strong id="progress">0 of 0 tasks completed</strong>
+    </section>
+
+    <h2>➕ Add a Task</h2>
+
+    <form class="add-form" id="taskForm">
+        <label for="taskName">Task or assignment name</label>
+        <input
+            id="taskName"
+            type="text"
+            placeholder="e.g. Complete HTML assignment"
+            required
+        >
+
+        <label for="dueDate">Due date</label>
+        <input id="dueDate" type="date" required>
+
+        <button class="add-button" type="submit">+ Add Task</button>
+    </form>
+
+    <h2>📝 My Tasks</h2>
+    <div id="taskList"></div>
+    <p id="emptyMessage">No tasks yet. Add your first task above!</p>
+
+    <footer>
+      <section class="timetable">
+        <h2>📅 My Class Timetable</h2>
+
+        <form id="classForm" class="add-form">
+            <label for="className">Subject name</label>
+            <input
+                id="className"
+                type="text"
+                placeholder="e.g. Mobile Computing"
+                required
+            >
+
+            <label for="classDay">Day</label>
+            <select id="classDay" required>
+                <option value="">Choose a day</option>
+                <option>Monday</option>
+                <option>Tuesday</option>
+                <option>Wednesday</option>
+                <option>Thursday</option>
+                <option>Friday</option>
+                <option>Saturday</option>
+            </select>
+
+            <label for="classTime">Class time</label>
+            <input id="classTime" type="time" required>
+
+            <button class="add-button" type="submit">
+                + Add Class
+            </button>
+        </form>
+
+        <div id="classList"></div>
+        <p id="emptyClasses">No classes added yet.</p>
+    </section>  
+        Small steps every day lead to big achievements 💜
+    </footer>
+</main>
+
+<script>
+    const taskForm = document.getElementById("taskForm");
+    const taskName = document.getElementById("taskName");
+    const dueDate = document.getElementById("dueDate");
+    const taskList = document.getElementById("taskList");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const progress = document.getElementById("progress");
+
+    let tasks = [];
+
+    try {
+        tasks = JSON.parse(
+            localStorage.getItem("studentPlannerTasks") || "[]"
+        );
+
+        if (!Array.isArray(tasks)) {
+            tasks = [];
+        }
+    } catch (error) {
+        tasks = [];
+    }
+
+    function saveTasks() {
+        try {
+            localStorage.setItem(
+                "studentPlannerTasks",
+                JSON.stringify(tasks)
+            );
+        } catch (error) {
+            alert("Tasks could not be saved in this browser.");
+        }
+    }
+
+    function renderTasks() {
+        taskList.replaceChildren();
+
+        const completedCount = tasks.filter(
+            task => task.completed
+        ).length;
+        document.getElementById("totalTasks").textContent =
+            tasks.length;
+
+        document.getElementById("completedTasks").textContent =
+            completedCount;
+
+        document.getElementById("pendingTasks").textContent =
+            tasks.length - completedCount;
+
+        progress.textContent =
+            completedCount + " of " + tasks.length +
+            " tasks completed";
+
+        emptyMessage.hidden = tasks.length > 0;
+
+        tasks.forEach(task => {
+            const card = document.createElement("div");
+            card.className = "task";
+
+            if (task.completed) {
+                card.classList.add("completed");
+            }
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.completed;
+            checkbox.setAttribute("aria-label", "Mark task complete");
+
+            checkbox.addEventListener("change", () => {
+                task.completed = checkbox.checked;
+                saveTasks();
+                renderTasks();
+            });
+
+            const details = document.createElement("div");
+            details.className = "task-details";
+
+            const title = document.createElement("strong");
+            title.className = "task-title";
+            title.textContent = task.name;
+
+            const date = document.createElement("span");
+            date.className = "category";
+            date.textContent = "Due: " + task.date;
+
+            details.append(title, date);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
+            deleteButton.textContent = "Delete";
+            deleteButton.setAttribute("aria-label", "Delete " + task.name);
+
+            deleteButton.addEventListener("click", () => {
+                tasks = tasks.filter(item => item.id !== task.id);
+                saveTasks();
+                renderTasks();
+            });
+
+            card.append(checkbox, details, deleteButton);
+            taskList.append(card);
+        });
+    }
+
+    taskForm.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const name = taskName.value.trim();
+        const date = dueDate.value;
+
+        if (!name || !date) {
+            alert("Please enter a task name and due date.");
+            return;
+        }
+
+        tasks.push({
+            id: Date.now() + Math.random(),
+            name: name,
+            date: date,
+            completed: false
+        });
+
+        saveTasks();
+        renderTasks();
+
+        taskForm.reset();
+        taskName.focus();
+    });
+document.getElementById("todayDate").textContent =
+        new Date().toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    renderTasks();
+    const classForm = document.getElementById("classForm");
+    const className = document.getElementById("className");
+    const classDay = document.getElementById("classDay");
+    const classTime = document.getElementById("classTime");
+    const classList = document.getElementById("classList");
+    const emptyClasses = document.getElementById("emptyClasses");
+
+    let classes = [];
+
+    try {
+        classes = JSON.parse(
+            localStorage.getItem("studentPlannerClasses") || "[]"
+        );
+
+        if (!Array.isArray(classes)) classes = [];
+    } catch (error) {
+        classes = [];
+    }
+
+    function renderClasses() {
+        classList.replaceChildren();
+        emptyClasses.hidden = classes.length > 0;
+
+        const sortedClasses =
+        [...classes].sort((a, b) =>
+            a.dayIndex - b.dayIndex || a.time.localeCompare(b.time)
+        );
+
+        sortedClasses.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "class-card";
+
+            const title = document.createElement("strong");
+            title.textContent = item.name;
+
+            const details = document.createElement("p");
+            details.textContent = item.day + " • " + item.time;
+
+            const remove = document.createElement("button");
+            remove.className = "delete-button";
+            remove.textContent = "Delete";
+
+            remove.addEventListener("click", () => {
+                classes = classes.filter(c => c.id !== item.id);
+                localStorage.setItem(
+                    "studentPlannerClasses",
+                    JSON.stringify(classes)
+                );
+                renderClasses();
+            });
+
+            card.append(title, details, remove);
+            classList.append(card);
+        });
+    }
+
+    classForm.addEventListener("submit", event => {
+        event.preventDefault();
+
+        const days = [
+            "Monday", "Tuesday", "Wednesday",
+            "Thursday", "Friday", "Saturday"
+        ];
+
+        classes.push({
+            id: Date.now() + Math.random(),
+            name: className.value.trim(),
+            day: classDay.value,
+            dayIndex: days.indexOf(classDay.value),
+            time: classTime.value
+        });
+
+        try {
+            localStorage.setItem(
+                "studentPlannerClasses",
+                JSON.stringify(classes)
+            );
+        } catch (error) {
+            classes.pop();
+            alert("Could not save this class in your browser.");
+            return;
+        }
+
+        renderClasses();
+        classForm.reset();
+    });
+
+    renderClasses();
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .catch((error) => {
+          console.error("Service worker registration failed:", error);
+        });
+    });
+  }
+</script>
+</body>
+</html>
